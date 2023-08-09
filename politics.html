@@ -15,53 +15,7 @@
       integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
       crossorigin="anonymous"
     ></script>
-    <script defer>
-
-      const fetchNews =  async(page, q)=>{
-
-        var url = 'https://newsapi.org/v2/top-headlines?' +
-                'q=china&' +
-                'q=russia&' +
-                'language=en&' +
-                'pageSize=9&' +
-                'page=' +page+
-                'sortBy=popularity&' +
-                'apiKey=e4cfb0ab42814a1886c259f13b4c6a3b';
-
-        var req = new Request(url);
-
-        let a = await fetch(req)
-        let response = await a.json()
-        console.log(JSON.stringify(response))
-
-        let str= ""
-
-        for (let item of response.articles){
-          str = str + `<div class="card my-5 mx-5" style="width: 18rem;">
-          <img src="${item.urlToImage}" class="card-img-top" alt="...">
-          <div class="card-body">
-            <h5 class="card-title">${item.title}</h5>
-            <p class="card-text">${item.description}</p>
-            <a href="${item.url}" target="_blank" class="btn btn-primary">Read on</a>
-          </div>
-        </div>`
-        }
-
-        document.querySelector(".content").innerHTML=str;
-      }
-
-      fetchNews(1, "")
-      
-      let search = document.getElementById("search");
-
-      search.addEventListener("click", function(e){
-        e.preventDefault;
-        let query = searchInput.value;
-        fetchNews(1,query);
-      })
-      
-
-    </script>
+    
 
     <title>World Watch</title>
   </head>
@@ -133,9 +87,9 @@
               </a>
 
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Business</a></li>
+                <li><a class="dropdown-item" href="business.html">Business</a></li>
                 <li><a class="dropdown-item" href="sports.html">Sports</a></li>
-                <li><a class="dropdown-item" href="#">Science</a></li>
+                <li><a class="dropdown-item" href="science.html">Science</a></li>
               </ul>
             </div>
           </ul>
@@ -167,15 +121,11 @@
 
     </div>
     <div class="d-flex justify-content-between">
-      <button class="btn btn-secondary">Previous Page</button>
-      <button class="btn btn-secondary">Next Page</button>
+      <button class="btn btn-secondary mb-4" style="margin: 80px;" id="prev">Previous Page</button>
+      <button class="btn btn-secondary mb-4" style="margin: 80px;" id="next">Next Page</button>
     </div>
     </div>
-    
-    
-  
 
-    
     
 </div>
     <!-- Footer -->
@@ -240,4 +190,74 @@
     </footer>
     <!-- Footer -->
   </body>
+
+  <script defer>
+
+    const fetchNews =  async(page, q)=>{
+
+      var url = 'https://newsapi.org/v2/everything?' +
+              'q=politics&' +
+              'language=en&' +
+              'pageSize=9&' +
+              'page=' +page+
+              'sortBy=popularity&' +
+              'apiKey=e4cfb0ab42814a1886c259f13b4c6a3b';
+
+      console.log(url);
+
+      var req = new Request(url);
+
+      let a = await fetch(req)
+      let response = await a.json()
+
+      let str= ""
+
+      for (let item of response.articles){
+        str = str + `<div class="card my-5 mx-5" style="width: 18rem;">
+        <img src="${item.urlToImage}" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">${item.title}</h5>
+          <p class="card-text">${item.description}</p>
+          <a href="${item.url}" target="_blank" class="btn btn-primary">Read on</a>
+        </div>
+      </div>`
+      }
+
+      document.querySelector(".content").innerHTML=str;
+    }
+
+    fetchNews(1, "")
+
+    let search = document.querySelector("#search");
+    let searchInput = document.querySelector("#searchInput");
+
+    search.addEventListener("click", function(e){
+      e.preventDefault();
+      let query = searchInput.value;
+      console.log(query);
+      fetchNews(1,query);
+    })
+
+    /*Code for next and previous buttons*/
+
+    let prevBtn=document.querySelector("#prev");
+    let nextBtn = document.querySelector("#next");
+    let currentPage = 1;
+
+    prevBtn.addEventListener("click", function(){
+      if (currentPage>1){
+        currentPage=currentPage-1;
+      } 
+      fetchNews(currentPage,"");
+    })
+
+    nextBtn.addEventListener("click", function(){
+      currentPage=currentPage+1;
+      fetchNews(currentPage,"");
+      console.log("ouch");
+    })
+
+
+
+</script>
 </html>
